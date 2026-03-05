@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ガチャゲーム</title>
 
+<style>
+body{
+    font-family: sans-serif;
+    text-align:center;
+    background:linear-gradient(135deg,#1e3c72,#2a5298);
+    color:white;
+}
+
+h1{
+    margin-top:30px;
+}
+
+#gachaButton{
+    padding:15px 40px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    background:gold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+#gachaButton:hover{
+    transform:scale(1.1);
+}
+
+#result{
+    margin-top:40px;
+    font-size:30px;
+    height:80px;
+}
+
+.card{
+    display:inline-block;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+    animation:pop 0.5s;
+}
+
+@keyframes pop{
+    0%{transform:scale(0);}
+    80%{transform:scale(1.2);}
+    100%{transform:scale(1);}
+}
+
+.common{background:#888;}
+.rare{background:#3aa0ff;}
+.super{background:#a64dff;}
+.ultra{background:#ff9933;}
+.legend{background:gold;color:black;}
+</style>
+
+</head>
+<body>
+
+<h1>🎮 ガチャゲーム</h1>
+
+<button id="gachaButton">ガチャを引く！</button>
+
+<div id="result"></div>
+
+<script>
+
+const characters = [
+{ name:"スライム", rarity:1 },
+{ name:"ゴブリン", rarity:1 },
+{ name:"ナイト", rarity:2 },
+{ name:"魔法使い", rarity:2 },
+{ name:"ドラゴン", rarity:3 },
+{ name:"フェニックス", rarity:4 },
+{ name:"伝説の勇者", rarity:5 }
+];
+
+function getRarity(){
+    const r=Math.random()*100;
+
+    if(r<40) return 1;
+    if(r<70) return 2;
+    if(r<90) return 3;
+    if(r<98) return 4;
+    return 5;
+}
+
+function rarityClass(r){
+    if(r==1) return "common";
+    if(r==2) return "rare";
+    if(r==3) return "super";
+    if(r==4) return "ultra";
+    return "legend";
+}
+
+function stars(r){
+    return "★".repeat(r);
+}
+
+document.getElementById("gachaButton").onclick=function(){
+
+    const rarity=getRarity();
+
+    const pool=characters.filter(c=>c.rarity==rarity);
+    const character=pool[Math.floor(Math.random()*pool.length)];
+
+    const result=document.getElementById("result");
+
+    result.innerHTML="ガチャ中...";
+
+    setTimeout(()=>{
+
+        result.innerHTML=
+        `<div class="card ${rarityClass(rarity)}">
+        ${stars(rarity)}<br>
+        ${character.name}
+        </div>`;
+
+    },1000);
+}
+
+</script>
+
+</body>
+</html>
