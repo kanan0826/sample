@@ -5,59 +5,83 @@
 <title>ガチャゲーム</title>
 
 <style>
+/* ===== 全体 ===== */
 body{
-    font-family: sans-serif;
+    margin:0;
+    font-family:Arial, sans-serif;
     text-align:center;
     background:linear-gradient(135deg,#1e3c72,#2a5298);
     color:white;
 }
 
+/* ===== タイトル ===== */
 h1{
-    margin-top:30px;
+    margin-top:40px;
 }
 
+/* ===== ガチャボタン ===== */
 #gachaButton{
+    margin-top:20px;
     padding:15px 40px;
     font-size:20px;
     border:none;
     border-radius:10px;
     background:gold;
     cursor:pointer;
-    transition:0.2s;
+    transition:transform 0.2s;
 }
 
 #gachaButton:hover{
     transform:scale(1.1);
 }
 
+/* ===== 結果表示 ===== */
 #result{
     margin-top:40px;
-    font-size:30px;
-    height:80px;
+    font-size:28px;
+    min-height:100px;
 }
 
+/* ===== カード ===== */
 .card{
     display:inline-block;
-    padding:20px;
+    padding:25px 40px;
     border-radius:15px;
-    margin-top:20px;
-    animation:pop 0.5s;
+    animation:pop 0.4s ease;
 }
 
+/* ===== レア度色 ===== */
+.common{
+    background:#888;
+}
+
+.rare{
+    background:#3aa0ff;
+}
+
+.super{
+    background:#a64dff;
+}
+
+.ultra{
+    background:#ff9933;
+}
+
+.legend{
+    background:gold;
+    color:black;
+}
+
+/* ===== アニメーション ===== */
 @keyframes pop{
     0%{transform:scale(0);}
     80%{transform:scale(1.2);}
     100%{transform:scale(1);}
 }
-
-.common{background:#888;}
-.rare{background:#3aa0ff;}
-.super{background:#a64dff;}
-.ultra{background:#ff9933;}
-.legend{background:gold;color:black;}
 </style>
-
 </head>
+
+
 <body>
 
 <h1>🎮 ガチャゲーム</h1>
@@ -66,61 +90,77 @@ h1{
 
 <div id="result"></div>
 
+
 <script>
 
+/* ===== キャラクターデータ ===== */
 const characters = [
-{ name:"スライム", rarity:1 },
-{ name:"ゴブリン", rarity:1 },
-{ name:"ナイト", rarity:2 },
-{ name:"魔法使い", rarity:2 },
-{ name:"ドラゴン", rarity:3 },
-{ name:"フェニックス", rarity:4 },
-{ name:"伝説の勇者", rarity:5 }
+    { name:"スライム", rarity:1 },
+    { name:"ゴブリン", rarity:1 },
+    { name:"ナイト", rarity:2 },
+    { name:"魔法使い", rarity:2 },
+    { name:"ドラゴン", rarity:3 },
+    { name:"フェニックス", rarity:4 },
+    { name:"伝説の勇者", rarity:5 }
 ];
 
-function getRarity(){
-    const r=Math.random()*100;
 
-    if(r<40) return 1;
-    if(r<70) return 2;
-    if(r<90) return 3;
-    if(r<98) return 4;
+/* ===== レア度抽選 ===== */
+function getRarity(){
+
+    const random = Math.random() * 100;
+
+    if(random < 40) return 1;
+    if(random < 70) return 2;
+    if(random < 90) return 3;
+    if(random < 98) return 4;
+
     return 5;
 }
 
-function rarityClass(r){
-    if(r==1) return "common";
-    if(r==2) return "rare";
-    if(r==3) return "super";
-    if(r==4) return "ultra";
+
+/* ===== レア度に応じたCSSクラス ===== */
+function getRarityClass(rarity){
+
+    if(rarity === 1) return "common";
+    if(rarity === 2) return "rare";
+    if(rarity === 3) return "super";
+    if(rarity === 4) return "ultra";
+
     return "legend";
 }
 
-function stars(r){
-    return "★".repeat(r);
+
+/* ===== 星表示 ===== */
+function getStars(rarity){
+    return "★".repeat(rarity);
 }
 
-document.getElementById("gachaButton").onclick=function(){
 
-    const rarity=getRarity();
+/* ===== ガチャボタン処理 ===== */
+document.getElementById("gachaButton").onclick = function(){
 
-    const pool=characters.filter(c=>c.rarity==rarity);
-    const character=pool[Math.floor(Math.random()*pool.length)];
+    const rarity = getRarity();
 
-    const result=document.getElementById("result");
+    const pool = characters.filter(character => character.rarity === rarity);
 
-    result.innerHTML="ガチャ中...";
+    const character = pool[Math.floor(Math.random() * pool.length)];
 
-    setTimeout(()=>{
+    const result = document.getElementById("result");
 
-        result.innerHTML=
-        `<div class="card ${rarityClass(rarity)}">
-        ${stars(rarity)}<br>
-        ${character.name}
+    result.textContent = "ガチャ中...";
+
+    setTimeout(function(){
+
+        result.innerHTML =
+        `<div class="card ${getRarityClass(rarity)}">
+            ${getStars(rarity)}<br>
+            ${character.name}
         </div>`;
 
     },1000);
-}
+
+};
 
 </script>
 
